@@ -1,0 +1,40 @@
+---
+- name: NETWORK AUTOMATION VLANS
+  hosts: CSR1kv
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: create vlan 10
+      ios_config:
+        parents:
+          - vlan 10
+        lines:
+          - name Faculty
+    - name: create vlan 20
+      ios_config:
+        parents:
+          - vlan 20
+        lines:
+          - name Students
+    - name: create vlan 99
+      ios_config:
+        parents:
+          - vlan 99
+        lines:
+          - name Management
+
+    - name: show vlan brief
+      ios_command:
+        commands:
+          - show vlan brief
+      register: vlan_brief
+
+    - name: SAVE OUTPUT to ./backups/
+      copy:
+        content: "{{ config.stdout[0] }}"
+        dest: "backups/show_run_{{ inventory_hostname }}.txt"
+
+   
+    
+  
